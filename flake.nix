@@ -82,15 +82,20 @@
       # module has no `platforms` overlay, so the two agree everywhere.
       inherit (module) config configFor;
 
-      # ── WHY THERE IS NO `web` (wasm) OUTPUT HERE ─────────────────────────
+      # ── THE `web` (wasm) OUTPUT, AND WHY NOTHING HERE DRIVES IT ───────
       #
-      # Nothing withholds one: this module is not `platform: true` and the
-      # builder publishes `packages.<system>.web` whenever its pin's
-      # logos-protocol carries the wasm outbound door (ADR 0009). It simply is
-      # not what a phone uses. fee_module reaches a device as a NATIVE Bundled
-      # Bare module in the app image (the mobile keys above), and the callers
-      # that matter — `wallet_backend_module` on the Bundled side, the wallet
-      # UI's `web` variant through the container — reach it BY NAME over the
+      # THERE IS ONE, and this flake neither asks for it nor withholds it: the
+      # forward above hands on whatever `module.packages.<target>` holds, this
+      # module is not `platform: true`, and the builder publishes a `web` key
+      # whenever its pin's logos-protocol carries the wasm outbound door
+      # (ADR 0009). Under the workspace pins that key is there today.
+      #
+      # It is simply not how fee_module reaches a phone, which is why nothing
+      # here drives it — no `checks.<system>.web-variant` the way uniswap's
+      # flake has one. fee_module reaches a device as a NATIVE Bundled Bare
+      # module in the app image (the mobile keys above), and the callers that
+      # matter — `wallet_backend_module` on the Bundled side, the wallet UI's
+      # `web` variant through the container — reach it BY NAME over the
       # ordinary provider registry.
     };
 }
